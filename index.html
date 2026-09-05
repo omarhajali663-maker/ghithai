@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10161c"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="غذائي"><link rel="manifest" href="manifest.webmanifest">
+<title>غذائي — متتبع التغذية</title>
+<style>
+:root{--bg:#0b1116;--card:#141c23;--card2:#10171d;--line:#27323b;--text:#f4f7f8;--muted:#9aa6af;--green:#78d64b;--blue:#55a9ff;--orange:#ffbd55;--purple:#a975ef;--red:#ff6b6b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#18252c 0,#0b1116 42%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:82px}.top{padding:20px 18px 10px;display:flex;justify-content:space-between;align-items:center}.title{font-size:24px;font-weight:800}.sub{color:var(--muted);font-size:13px;margin-top:3px}.icon{width:42px;height:42px;border:1px solid var(--line);background:var(--card);color:white;border-radius:14px}
+.screen{display:none;padding:10px 16px}.screen.active{display:block}
+.card{background:linear-gradient(145deg,#151e25,#11181e);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 8px 30px #0002}
+h2{font-size:17px;margin:0 0 13px}h3{font-size:15px;margin:0}.muted{color:var(--muted)}
+.ring{width:210px;height:210px;border-radius:50%;margin:8px auto 16px;display:grid;place-items:center;background:conic-gradient(var(--green) var(--p,0%),#303a42 0);position:relative}
+.ring:after{content:"";position:absolute;inset:13px;background:#10171d;border-radius:50%}.ringin{z-index:1;text-align:center}.big{font-size:39px;font-weight:850}.unit{font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#121a20;border:1px solid #253039;border-radius:15px;padding:12px}.stathead{display:flex;justify-content:space-between;font-size:13px}.statnum{font-size:18px;font-weight:750;margin:6px 0}.bar{height:6px;border-radius:10px;background:#28323a;overflow:hidden}.fill{height:100%;border-radius:10px}
+.green{background:var(--green)}.blue{background:var(--blue)}.orange{background:var(--orange)}.purple{background:var(--purple)}
+.primary{width:100%;border:0;border-radius:15px;background:var(--green);color:#091006;font-weight:850;padding:14px;margin-top:10px}.secondary{width:100%;border:1px solid var(--green);background:transparent;color:var(--green);border-radius:14px;padding:12px;font-weight:750}
+.food{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#121a20;border:1px solid #253039;border-radius:15px;padding:13px;margin:8px 0}.foodinfo{min-width:0}.foodname{font-weight:750}.foodmeta{font-size:12px;color:var(--muted);margin-top:3px}.foodcal{font-size:13px;white-space:nowrap}.empty{text-align:center;padding:35px 10px;color:var(--muted)}
+.search{display:flex;gap:8px;margin-bottom:10px}.search input{flex:1}.input{width:100%;background:#0e151b;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}.input:focus{border-color:#5c9c43}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field{margin-bottom:9px}.field label{display:block;color:var(--muted);font-size:12px;margin:0 0 5px}
+.qty{display:flex;align-items:center;justify-content:center;gap:15px;margin:18px 0}.qty button{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:#182129;color:white;font-size:25px}.qtyval{min-width:120px;text-align:center;background:#10171d;border:1px solid var(--line);border-radius:15px;padding:9px}.qtyval b{font-size:29px;display:block}.nutrition{display:grid;gap:0}.nrow{display:flex;justify-content:space-between;padding:11px 4px;border-bottom:1px solid #253039}.nrow:last-child{border-bottom:0}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#0e151bfa;backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:10}.tab{border:0;background:none;color:var(--muted);padding:8px;border-radius:12px}.tab.active{color:var(--green);background:#18221a}.tab span{display:block;font-size:11px;margin-top:3px}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;justify-content:center;z-index:20}.modal.show{display:flex}.sheet{width:min(520px,100%);max-height:92vh;overflow:auto;background:#10171d;border:1px solid var(--line);border-radius:24px 24px 0 0;padding:18px}.sheettop{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-20px);opacity:0;background:#dfffcf;color:#15200e;padding:11px 16px;border-radius:12px;font-weight:700;z-index:30;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%)}
+.badge{font-size:11px;color:var(--green);border:1px solid #39602e;border-radius:20px;padding:4px 8px}.unitselect{appearance:auto}
+.reportbox{height:130px;display:flex;align-items:center;justify-content:center}.donut{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--green) 0 35%,var(--blue) 35% 65%,var(--orange) 65% 85%,#33404a 85%);display:grid;place-items:center}.donut:after{content:"";width:78px;height:78px;background:#121a20;border-radius:50%}.donuttxt{position:absolute;text-align:center;z-index:1;font-weight:800}.small{font-size:11px;color:var(--muted);font-weight:500}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div><div class="title">غذائي</div><div class="sub">تتبّع أكلك وتقدّمك كل يوم</div></div><button class="icon" onclick="showSettings()">⚙</button></header>
+
+<section id="home" class="screen active">
+<div class="card">
+  <h2>اليوم</h2>
+  <div class="ring" id="ring"><div class="ringin"><div class="big" id="calNow">0</div><div class="unit">/ 1800 سعرة</div><div class="unit" id="calRemain">المتبقي 1800</div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stathead"><span>البروتين</span><span>🥩</span></div><div class="statnum"><span id="pNow">0</span> / <span id="pGoal">140</span>غ</div><div class="bar"><div id="pBar" class="fill green"></div></div></div>
+    <div class="stat"><div class="stathead"><span>الكربوهيدرات</span><span>🌾</span></div><div class="statnum"><span id="cNow">0</span> / <span id="cGoal">180</span>غ</div><div class="bar"><div id="cBar" class="fill blue"></div></div></div>
+    <div class="stat"><div class="stathead"><span>الدهون</span><span>💧</span></div><div class="statnum"><span id="fNow">0</span> / <span id="fGoal">60</span>غ</div><div class="bar"><div id="fBar" class="fill orange"></div></div></div>
+    <div class="stat"><div class="stathead"><span>الألياف</span><span>🌿</span></div><div class="statnum"><span id="fiNow">0</span> / <span id="fiGoal">30</span>غ</div><div class="bar"><div id="fiBar" class="fill purple"></div></div></div>
+  </div>
+</div>
+<div class="card"><h2>وجبات اليوم</h2><div id="todayFoods"></div><button class="primary" onclick="openFoodList()">＋ إضافة طعام</button></div>
+</section>
+
+<section id="foods" class="screen">
+<div class="card"><h2>قائمة الأطعمة</h2><div class="search"><input id="search" class="input" placeholder="ابحث عن طعام..." oninput="renderFoods()"></div><button class="secondary" onclick="openAddFood()">＋ إضافة طعام جديد</button></div>
+<div id="foodList"></div>
+</section>
+
+<section id="reports" class="screen">
+<div class="card"><h2>التقارير</h2><div class="reportbox"><div class="donut"><div class="donuttxt"><span id="reportCal">0</span><div class="small">من 1800</div></div></div></div><div class="nutrition" id="reportRows"></div></div>
+<div class="card"><h2>هدفك اليومي</h2><div class="nrow"><span>السعرات</span><b>1800 kcal</b></div><div class="nrow"><span>البروتين</span><b>140 g</b></div><div class="nrow"><span>الكربوهيدرات</span><b>180 g</b></div><div class="nrow"><span>الدهون</span><b>60 g</b></div><div class="nrow"><span>الألياف</span><b>30 g</b></div></div>
+</section>
+
+<nav class="tabs"><button class="tab active" data-tab="home" onclick="go('home')">⌂<span>الرئيسية</span></button><button class="tab" data-tab="foods" onclick="go('foods')">◫<span>الأطعمة</span></button><button class="tab" data-tab="reports" onclick="go('reports')">▥<span>التقارير</span></button></nav>
+</div>
+
+<div id="modal" class="modal"><div class="sheet" id="sheet"></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const GOALS={cal:1800,protein:140,carbs:180,fat:60,fiber:30};
+const NAMES={cal:'السعرات الحرارية',protein:'البروتين',carbs:'الكربوهيدرات',fat:'الدهون',fiber:'الألياف',sugar:'السكر',sodium:'الصوديوم',satfat:'الدهون المشبعة',cholesterol:'الكوليسترول'};
+let foods=JSON.parse(localStorage.getItem('foods_v1')||'[]');
+let logs=JSON.parse(localStorage.getItem('logs_v1')||'{}');
+const UNITS=[['g','غرام'],['ml','مل'],['piece','حبة'],['egg','بيضة'],['loaf','رغيف'],['can','علبة'],['spoon','ملعقة'],['cup','كوب'],['slice','شريحة'],['custom','مخصص']];
+const UNIT_LABELS=Object.fromEntries(UNITS);
+const key=()=>new Date().toISOString().slice(0,10);
+function migrateData(){
+  let changed=false;
+  foods=foods.map(f=>{
+    if(f.unit)return f;
+    const n={}; Object.keys(f.n||{}).forEach(k=>n[k]=Number(f.n[k])||0);
+    changed=true; return {...f,n,unit:'g',unitLabel:'غرام'};
+  });
+  Object.keys(logs).forEach(d=>logs[d]=(logs[d]||[]).map(x=>{
+    if(x.unit)return x;
+    changed=true; return {...x,qty:Number(x.grams)||0,unit:'g',unitLabel:'غرام'};
+  }));
+  if(changed)save();
+}
+function save(){localStorage.setItem('foods_v1',JSON.stringify(foods));localStorage.setItem('logs_v1',JSON.stringify(logs))}
+function fmt(v){return Math.round((Number(v)||0)*10)/10}
+function fmtQty(v){return Number.isInteger(Number(v))?String(Number(v)):String(Math.round(Number(v)*10)/10)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+migrateData();
+function today(){return logs[key()]||[]}
+function sum(){let s={cal:0,protein:0,carbs:0,fat:0,fiber:0,sugar:0,sodium:0,satfat:0,cholesterol:0};today().forEach(x=>Object.keys(s).forEach(k=>s[k]+=(x.n[k]||0)));return s}
+function go(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='home')renderHome();if(id==='foods')renderFoods();if(id==='reports')renderReports()}
+function pct(x,g){return Math.min(100,Math.round(x/g*100))}
+function renderHome(){let s=sum();document.getElementById('calNow').textContent=Math.round(s.cal);document.getElementById('calRemain').textContent='المتبقي '+Math.max(0,Math.round(GOALS.cal-s.cal));document.getElementById('ring').style.setProperty('--p',pct(s.cal,GOALS.cal)+'%');['protein','carbs','fat','fiber'].forEach(k=>{document.getElementById(k[0]==='p'?'pNow':k[0]==='c'?'cNow':k[0]==='f'&&k!=='fiber'?'fNow':'fiNow').textContent=Math.round(s[k]);document.getElementById(k==='protein'?'pBar':k==='carbs'?'cBar':k==='fat'?'fBar':'fiBar').style.width=pct(s[k],GOALS[k])+'%'});
+let box=document.getElementById('todayFoods');box.innerHTML=today().length?today().map((x,i)=>`<div class="food"><div class="foodinfo"><div class="foodname">${esc(x.name)}</div><div class="foodmeta">${fmtQty(x.qty??x.grams)} ${esc(x.unitLabel||'غرام')}</div></div><div class="foodcal">${Math.round(x.n.cal)} سعرة</div><button class="icon" onclick="removeLog(${i})">×</button></div>`).join(''):'<div class="empty">لم تسجّل أي طعام اليوم بعد.</div>'}
+function renderFoods(){let q=(document.getElementById('search')?.value||'').trim().toLowerCase();let arr=foods.filter(f=>f.name.toLowerCase().includes(q));document.getElementById('foodList').innerHTML=arr.length?arr.map(f=>`<div class="food" onclick="openFood(${f.id})"><div class="foodinfo"><div class="foodname">${esc(f.name)}</div><div class="foodmeta">${f.unit==='g'?'لكل 100 غرام':'لكل '+esc(f.unitLabel||'غرام')} · بروتين ${fmt(f.n.protein)}غ</div></div><div class="foodcal">${f.unit==='g'?fmt(f.n.cal):fmt(f.n.cal)} سعرة</div></div>`).join(''):'<div class="card empty">قائمة الأطعمة فارغة.<br>أضف أول طعام خاص بك.</div>'}
+function openFoodList(){go('foods')}
+function toggleCustomUnit(){const custom=document.getElementById('unit')?.value==='custom';const w=document.getElementById('customUnitWrap');if(w)w.style.display=custom?'block':'none'}
+function openAddFood(){document.getElementById('sheet').innerHTML=`<div class="sheettop"><h2>إضافة طعام جديد</h2><button class="icon" onclick="closeModal()">×</button></div><p class="muted">أدخل القيم الغذائية <b>لكل 100 غرام أو 100 مل</b> عند اختيار الغرام أو المل، أو <b>لكل وحدة</b> لباقي الوحدات. مثال: البيضة = قيم بيضة واحدة.</p><div class="field"><label>اسم الطعام *</label><input id="fn" class="input" placeholder="مثال: بيض"></div><div class="field"><label>وحدة القياس *</label><select id="unit" class="input unitselect" onchange="toggleCustomUnit()">${UNITS.map(u=>`<option value="${u[0]}">${u[1]}</option>`).join('')}</select></div><div class="field" id="customUnitWrap" style="display:none"><label>اسم الوحدة المخصص *</label><input id="customUnit" class="input" placeholder="مثال: شريحة"></div><div class="formgrid">${['cal','protein','carbs','fat','fiber','sugar','sodium','satfat','cholesterol'].map(k=>`<div class="field"><label>${NAMES[k]} (${k==='sodium'||k==='cholesterol'?'ملغ':k==='cal'?'kcal':'غ'})</label><input id="n_${k}" class="input" type="number" min="0" step="0.1" value="0"></div>`).join('')}</div><button class="primary" onclick="saveFood()">حفظ الطعام</button>`;showModal()}
+function saveFood(){let name=document.getElementById('fn').value.trim();if(!name){toast('أدخل اسم الطعام أولاً');return}let unit=document.getElementById('unit').value,unitLabel=unit==='custom'?document.getElementById('customUnit').value.trim():UNIT_LABELS[unit];if(!unitLabel){toast('أدخل اسم الوحدة المخصصة');return}let n={};['cal','protein','carbs','fat','fiber','sugar','sodium','satfat','cholesterol'].forEach(k=>n[k]=Number(document.getElementById('n_'+k).value)||0);foods.push({id:Date.now(),name,n,unit,unitLabel});save();closeModal();renderFoods();toast('تم حفظ الطعام ✓')}
+function openFood(id){let f=foods.find(x=>x.id===id);if(!f)return;let unit=f.unit||'g',label=f.unitLabel||'غرام',initial=(unit==='g'||unit==='ml')?100:1;document.getElementById('sheet').innerHTML=`<div class="sheettop"><h2>${esc(f.name)}</h2><button class="icon" onclick="closeModal()">×</button></div><div class="muted">حدد الكمية التي تناولتها</div><div class="qty"><button onclick="changeQty(-1)">−</button><div class="qtyval"><b id="qty">${fmtQty(initial)}</b><span id="qtyUnit">${esc(label)}</span></div><button onclick="changeQty(1)">＋</button></div><div class="field"><label>أو اكتب الكمية مباشرة</label><input id="qtyInput" class="input" type="number" min="0.1" step="0.1" value="${initial}" oninput="setQty(this.value)"></div><div class="card"><h3>القيمة الغذائية لهذه الكمية</h3><div class="nutrition" id="selectedNut"></div></div><button class="primary" onclick="eat(${id})">تم الأكل ✓</button><button class="secondary" style="margin-top:8px" onclick="closeModal()">إلغاء</button>`;showModal();window.currentFood=f;window.currentQty=initial;updateSelected()}
+function changeQty(d){let f=window.currentFood,step=f?.unit==='g'||f?.unit==='ml'?10:1;window.currentQty=Math.max(0.1,Math.min(10000,Number(window.currentQty||0)+d*step));document.getElementById('qty').textContent=fmtQty(window.currentQty);document.getElementById('qtyInput').value=window.currentQty;updateSelected()}
+function setQty(v){window.currentQty=Math.max(0.1,Math.min(10000,Number(v)||0.1));document.getElementById('qty').textContent=fmtQty(window.currentQty);updateSelected()}
+function calcFoodN(f,q){let factor=(f.unit==='g'||f.unit==='ml')?q/100:q;let s={};Object.keys(f.n).forEach(k=>s[k]=f.n[k]*factor);return s}
+function updateSelected(){let f=window.currentFood,q=window.currentQty||1,s=calcFoodN(f,q);document.getElementById('selectedNut').innerHTML=Object.entries(s).map(([k,v])=>`<div class="nrow"><span>${NAMES[k]}</span><b>${k==='sodium'||k==='cholesterol'?Math.round(v)+' ملغ':k==='cal'?Math.round(v)+' kcal':fmt(v)+' غ'}</b></div>`).join('')}
+function eat(id){let f=foods.find(x=>x.id===id),q=window.currentQty||1,n=calcFoodN(f,q);if(!logs[key()])logs[key()]=[];logs[key()].push({name:f.name,qty:q,unit:f.unit||'g',unitLabel:f.unitLabel||'غرام',n});save();closeModal();go('home');toast('تمت إضافة الطعام إلى اليوم ✓')}
+
+function removeLog(i){logs[key()].splice(i,1);save();renderHome();toast('تم حذف الطعام')}
+function renderReports(){let s=sum();document.getElementById('reportCal').textContent=Math.round(s.cal);document.getElementById('reportRows').innerHTML=[['السعرات','cal','kcal'],['البروتين','protein','غ'],['الكربوهيدرات','carbs','غ'],['الدهون','fat','غ'],['الألياف','fiber','غ'],['السكر','sugar','غ'],['الصوديوم','sodium','ملغ']].map(a=>`<div class="nrow"><span>${a[0]}</span><b>${Math.round(s[a[1]]*10)/10} ${a[2]}</b></div>`).join('')}
+function showModal(){document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
+function showSettings(){document.getElementById('sheet').innerHTML=`<div class="sheettop"><h2>الإعدادات</h2><button class="icon" onclick="closeModal()">×</button></div><div class="card"><h3>أهدافك الحالية</h3><p class="muted">السعرات: 1800 kcal · البروتين: 140 g · الكربوهيدرات: 180 g · الدهون: 60 g · الألياف: 30 g</p><p class="muted">تم وضعها كأهداف بداية مناسبة لتطبيق تنشيف، ويمكن جعلها قابلة للتعديل في النسخة التالية.</p></div><button class="secondary" onclick="if(confirm('سيتم حذف جميع الأطعمة والسجل. هل أنت متأكد؟')){localStorage.clear();location.reload()}">مسح كل بيانات التطبيق</button>`;showModal()}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1800)}
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+renderHome();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script></body>
+</html>
